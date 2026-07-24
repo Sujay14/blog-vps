@@ -1,0 +1,148 @@
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
+posts: list[dict] = [
+    {
+        "id": 1,
+        "author": "-14",
+        "title": "FastAPI is Awesome",
+        "content": "This framework is really easy to use and super fast.",
+        "date_posted": "April 20, 2025",
+    },
+    {
+        "id": 2,
+        "author": "flame",
+        "title": "Python is Great for Web Development",
+        "content": "Python is a great language for web development, and FastAPI makes it even better.",
+        "date_posted": "April 21, 2025",
+    },
+]
+
+
+@app.get("/", include_in_schema=False, name="home")
+@app.get("/posts", include_in_schema=False, name="posts")
+def home(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "home.html",
+        {"posts": posts, "title": "Home"},
+    )
+# # Decorates the function to handle HTTP GET requests at the root URL ("/")
+# # 'include_in_schema=False' hides this endpoint from the automatic OpenAPI /docs page
+# # 'name="home"' assigns an internal name to this route for reverse URL lookup (url_for)
+# @app.get("/", include_in_schema=False, name="home")
+
+# # Decorates the same function to also handle HTTP GET requests at the "/posts" URL
+# # 'include_in_schema=False' hides this endpoint from /docs as well
+# # 'name="posts"' gives this second path its own internal lookup name
+# @app.get("/posts", include_in_schema=False, name="posts")
+
+# # Defines the function named 'home' that runs whenever a user visits "/" or "/posts"
+# # Accepts 'request: Request', which captures incoming browser metadata (headers, cookies, etc.)
+# def home(request: Request):
+
+#     # Renders and returns an HTML page to the browser using Starlette/Jinja2 templating
+#     return templates.TemplateResponse(
+        
+#         # Passes the HTTP request object required by Jinja2 to handle context correctly
+#         request,
+        
+#         # Specifies the template file inside your 'templates/' directory to render
+#         "home.html",
+        
+#         # Passes a dictionary of variables (context) into 'home.html'
+#         # 'posts': passes your Python list/data to display posts in HTML
+#         # 'title': passes the string "Home" to fill in the HTML page title
+#         {"posts": posts, "title": "Home"},
+#     )
+
+# @app.get("/api/posts")
+# def get_posts():
+#     return posts
+
+@app.get("/posts/{post_id}", include_in_schema=False)
+def post_page(request: Request, post_id: int):
+    for post in posts:
+        if post.get("id") == post_id:
+            title = post["title"][:50]
+
+            return templates.TemplateResponse(request,
+                "post.html",
+                {
+                    "post": post,
+                    "title": title,
+                },
+            )
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Post not found",
+    )
+
+@app.get("/api/posts/{post_id}")
+def get_post(post_id: int):
+    # Step 1: Python starts looping through 'posts'
+    for post in posts:
+      
+        if post.get("id") == post_id:
+            return post  # Stops the loop immediately and returns! # Step 2: If the loop finishes without finding anything, return error
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = 'Post not found')
+  # Iteration 1: 'post' is {"id": 1, "title": "First Post"}
+        # Checks: 1 == 2? False. Keeps looping.
+        # Iteration 2: 'post' is {"id": 2, "title": "Second Post"}
+        # Checks: 2 == 2? True!
+
+
+@app.exception_handler(StarletteHTTPException)
+def general_http_exception_handler(request: Request, exception: StarletteHTTPException):
+    message = (
+        exception.detail
+        if exception.detail
+        else "An error occurred. Please check your request and try again."
+    )
+
+    if request.url.path.startswith("/api"):
+        return JSONResponse(
+            status_code=exception.status_code,
+            content={"detail": message},
+        )
+    return templates.TemplateResponse(
+        request,
+        "error.html",
+        {
+            "status_code": exception.status_code,
+            "title": exception.status_code,
+            "message": message,
+        },
+        status_code=exception.status_code,
+    )
+
+@app.exception_handler(RequestValidationError)
+def validation_exception_handler(request: Request, exception: StarletteHTTPException):
+    if request.url.path.startswith("/api"):
+        return JSONResponse(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            content={"detail": exception.errors()},
+
+        )
+    return templates.TemplateResponse(
+        request,
+        "error.html",
+        {
+            "status_code": status.HTTP_422_UNPROCESSABLE_CONTENT,
+            "title": status.HTTP_422_UNPROCESSABLE_CONTENT,
+            "message":"Invalid request",
+        },
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+    )
+day 3
