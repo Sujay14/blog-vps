@@ -146,3 +146,43 @@ def validation_exception_handler(request: Request, exception: StarletteHTTPExcep
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
     )
 day 3
+
+
+router.get("/me",response_model=UserPrivate)
+async def get_current_user(current_user:CurrentUser):
+    # token: Annotated[str ,Depends(oauth2_scheme)],
+    # db: Annotated[AsyncSession, Depends(get_db)],
+
+    return current_user
+    # """get the current authenticated user"""
+    # user_id = verify_access_token(token)
+    # if user_id is None:
+    #     raise HTTPException(
+    #     status_code=status.HTTP_401_UNAUTHORIZED,
+    #     detail="invalid or expired token",
+    #     headers={"WWW-Authenticate": "Bearer"},
+    # )
+
+    # try:
+    #     user_id_int = int(user_id)
+    # except (TypeError, ValueError):
+    #     raise HTTPException(
+    #     status_code=status.HTTP_401_UNAUTHORIZED,
+    #     detail="invalid or expired token",
+    #     headers={"WWW-Authenticate": "Bearer"},
+    # )
+        
+    # result = await db.execute(
+    #     select(models.User).where(models.User.id == user_id_int),
+    # )
+    # user = result.scalars().first()
+    # if not user:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED,
+    #         detail="invalid or expired token",
+    #         headers={"WWW-Authenticate": "Bearer"},
+    #     )
+    # return user
+
+    https://send.now/pahgug5vc9hr
+    https://send.now/zo2rlug52ebm
