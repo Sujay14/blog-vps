@@ -186,3 +186,10 @@ async def get_current_user(current_user:CurrentUser):
 
     https://send.now/pahgug5vc9hr
     https://send.now/zo2rlug52ebm
+
+        # imp lines
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    transport = httpx.ASGITransport(app=app)
+populate(), populate_db
+KQLCf7uJNk33a99njyfT8F4XB/Rb7GWWJJ8Vftcg

@@ -282,6 +282,7 @@ async def update_post_dates() -> None:
 
 
 async def populate() -> None:
+    # imp lines
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     transport = httpx.ASGITransport(app=app)

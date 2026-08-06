@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import models
 from config import settings
 from database import get_db
+from config import settings
 
 class User(Base):
     __tablename__ = "users"
@@ -40,9 +41,9 @@ class User(Base):
     @property
     def image_path(self) -> str:
         if self.image_file:
-            return f"/media/profile_pics/{self.image_file}"
-        return "/static/profile_pics/default.jpg"
+            return f"https://{settings.s3_bucket_name}.s3.{settings.s3_region}.amazonaws.com/profile_pics/{self.image_file}"
 
+        return "/static/profile_pics/default.jpg"
 
 class Post(Base):
     __tablename__ = "posts"
@@ -59,7 +60,8 @@ class Post(Base):
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
     )
-
+    likes: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    
     author: Mapped[User] = relationship(back_populates="posts")
 
 class PasswordResetToken(Base):
