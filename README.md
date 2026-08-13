@@ -69,7 +69,7 @@ uv run alembic upgrade head
 ```bash
 uv run uvicorn main:app --reload
 ```
-
+or
 ```bash
 uv run fastapi dev main.py
 ```
