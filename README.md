@@ -70,6 +70,10 @@ uv run alembic upgrade head
 uv run uvicorn main:app --reload
 ```
 
+```bash
+uv run fastapi dev main.py
+```
+
 The application will be available at:
 
 ```text
