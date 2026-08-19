@@ -69,10 +69,10 @@ uv run alembic upgrade head
 ```bash
 uv run uvicorn main:app --reload
 ```
-or
+<!-- or
 ```bash
 uv run fastapi dev main.py
-```
+``` -->
 
 The application will be available at:
 
@@ -80,7 +80,7 @@ The application will be available at:
 http://localhost:8000
 ```
 
-## API Documentation\redoc
+## API Documentation
 
 Once the server is running:
 
