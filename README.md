@@ -80,7 +80,7 @@ The application will be available at:
 http://localhost:8000
 ```
 
-## API Documentation
+## API Documentation\redoc
 
 Once the server is running:
 
@@ -114,4 +114,4 @@ fast_blog_api/
 
 **Sujay**
 
-GitHub: https://github.com/Sujay14 hi
+GitHub: https://github.com/Sujay14
