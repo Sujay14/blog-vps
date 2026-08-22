@@ -115,3 +115,10 @@ fast_blog_api/
 **Sujay**
 
 GitHub: https://github.com/Sujay14
+
+## Hosted 
+
+```text
+https://blog-fastapi.duckdns.org/
+```
+
