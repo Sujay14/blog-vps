@@ -52,6 +52,9 @@ async def add_security_headers(request: Request, call_next):
         )
     
     return response
+@app.get("/newrelic-test")
+async def newrelic_test():
+    return {"status": "New Relic is working"}
 
 @app.get("/health")
 async def health_check(db: Annotated[AsyncSession, Depends(get_db)]):
